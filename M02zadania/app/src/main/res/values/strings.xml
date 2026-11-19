@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TechSklep</string>
+    <string name="header_title">TechSklep</string>
+    <string name="header_description">Najlepsza elektronika i akcesoria w jednym miejscu.</string>
+    <string name="button_start">Start</string>
+    <string name="toast_soon">Wkrótce</string>
+</resources>
