@@ -12,115 +12,67 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="@string/header_title"
-            android:textSize="22sp"
+            android:layout_marginBottom="12dp"
+            android:text="Kalkulator BMI"
+            android:textSize="24sp"
             android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/etEventName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_event_name"
-            android:inputType="textCapSentences" />
-
-        <EditText
-            android:id="@+id/etParticipants"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="@string/hint_participants"
-            android:inputType="number" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/label_room"
-            android:textStyle="bold" />
-
-        <Spinner
-            android:id="@+id/spRoom"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:entries="@array/rooms_array" />
-
-        <TextView
-            android:id="@+id/tvRoomError"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#D32F2F"
-            android:textSize="12sp"
-            android:visibility="gone" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/label_catering"
+            android:text="System jednostek:"
             android:textStyle="bold" />
 
         <RadioGroup
-            android:id="@+id/rgCatering"
+            android:id="@+id/rgUnits"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginBottom="12dp"
+            android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/rbNone"
+                android:id="@+id/rbMetric"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/catering_none" />
+                android:checked="true"
+                android:text="kg / cm" />
 
             <RadioButton
-                android:id="@+id/rbCoffee"
+                android:id="@+id/rbImperial"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/catering_coffee" />
-
-            <RadioButton
-                android:id="@+id/rbLunch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/catering_lunch" />
+                android:layout_marginStart="24dp"
+                android:text="lb / in" />
         </RadioGroup>
 
-        <TextView
-            android:id="@+id/tvCateringError"
+        <EditText
+            android:id="@+id/etWeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#D32F2F"
-            android:textSize="12sp"
-            android:visibility="gone" />
+            android:hint="Waga w kg (20 - 300)"
+            android:inputType="numberDecimal" />
 
-        <CheckBox
-            android:id="@+id/cbTerms"
+        <EditText
+            android:id="@+id/etHeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/cb_terms" />
-
-        <TextView
-            android:id="@+id/tvTermsError"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#D32F2F"
-            android:textSize="12sp"
-            android:visibility="gone" />
+            android:layout_marginTop="12dp"
+            android:hint="Wzrost w cm (100 - 250)"
+            android:inputType="numberDecimal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnSave"
+                android:id="@+id/btnCalculate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:text="@string/btn_save" />
+                android:text="Oblicz BMI" />
 
             <Button
                 android:id="@+id/btnClear"
@@ -128,8 +80,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="@string/btn_clear" />
+                android:text="Wyczyść" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="#EFEFEF"
+            android:padding="16dp"
+            android:text="Wpisz dane i kliknij Oblicz BMI"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>

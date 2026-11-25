@@ -1,189 +1,208 @@
 package com.napertyhryhorenko.widgetyzadania;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String KEY_ROOM_ERR = "key_room_err";
-    private static final String KEY_CATERING_ERR = "key_catering_err";
-    private static final String KEY_TERMS_ERR = "key_terms_err";
+    private static final String KEY_RESULT_TEXT = "saved_result_text";
 
-    private EditText etEventName;
-    private EditText etParticipants;
-    private Spinner spRoom;
-    private RadioGroup rgCatering;
-    private CheckBox cbTerms;
-
-    private TextView tvRoomError;
-    private TextView tvCateringError;
-    private TextView tvTermsError;
+    private RadioGroup rgUnits;
+    private EditText etWeight;
+    private EditText etHeight;
+    private TextView tvResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        etEventName = findViewById(R.id.etEventName);
-        etParticipants = findViewById(R.id.etParticipants);
-        spRoom = findViewById(R.id.spRoom);
-        rgCatering = findViewById(R.id.rgCatering);
-        cbTerms = findViewById(R.id.cbTerms);
-
-        tvRoomError = findViewById(R.id.tvRoomError);
-        tvCateringError = findViewById(R.id.tvCateringError);
-        tvTermsError = findViewById(R.id.tvTermsError);
-
-        Button btnSave = findViewById(R.id.btnSave);
+        rgUnits = findViewById(R.id.rgUnits);
+        etWeight = findViewById(R.id.etWeight);
+        etHeight = findViewById(R.id.etHeight);
+        tvResult = findViewById(R.id.tvResult);
+        Button btnCalculate = findViewById(R.id.btnCalculate);
         Button btnClear = findViewById(R.id.btnClear);
 
         if (savedInstanceState != null) {
-            restoreErrorTextView(tvRoomError, savedInstanceState.getString(KEY_ROOM_ERR));
-            restoreErrorTextView(tvCateringError, savedInstanceState.getString(KEY_CATERING_ERR));
-            restoreErrorTextView(tvTermsError, savedInstanceState.getString(KEY_TERMS_ERR));
+            String savedResult = savedInstanceState.getString(KEY_RESULT_TEXT);
+            if (savedResult != null) {
+                tvResult.setText(savedResult);
+            }
         }
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
+        updateHints();
+
+        rgUnits.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                updateHints();
+                etWeight.setError(null);
+                etHeight.setError(null);
+            }
+        });
+
+        etWeight.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateWeightLive(s.toString().trim());
+            }
+        });
+
+        btnCalculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validateAndSave();
+                calculateBmi();
             }
         });
 
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearForm();
+                clearAll();
             }
         });
     }
 
-    private void validateAndSave() {
-        boolean isValid = true;
+    private boolean isMetric() {
+        return rgUnits.getCheckedRadioButtonId() == R.id.rbMetric;
+    }
 
-        String eventName = etEventName.getText().toString().trim();
-        if (eventName.isEmpty()) {
-            etEventName.setError(getString(R.string.err_event_empty));
-            isValid = false;
-        } else if (eventName.length() < 3) {
-            etEventName.setError(getString(R.string.err_event_short));
-            isValid = false;
+    private void updateHints() {
+        if (isMetric()) {
+            etWeight.setHint("Waga w kg (20 - 300)");
+            etHeight.setHint("Wzrost w cm (100 - 250)");
         } else {
-            etEventName.setError(null);
+            etWeight.setHint("Waga w lb (44 - 660)");
+            etHeight.setHint("Wzrost w in (39 - 98)");
+        }
+    }
+
+    private void validateWeightLive(String text) {
+        if (text.isEmpty()) {
+            etWeight.setError(null);
+            return;
         }
 
-        String participantsStr = etParticipants.getText().toString().trim();
-        int participants = 0;
-        if (participantsStr.isEmpty()) {
-            etParticipants.setError(getString(R.string.err_participants_empty));
+        double minWeight = isMetric() ? 20.0 : 44.0;
+        double maxWeight = isMetric() ? 300.0 : 660.0;
+        String unit = isMetric() ? "kg" : "lb";
+
+        try {
+            double weight = Double.parseDouble(text);
+            if (weight < minWeight || weight > maxWeight) {
+                etWeight.setError(String.format(Locale.US, "Waga musi być z zakresu %.0f - %.0f %s", minWeight, maxWeight, unit));
+            } else {
+                etWeight.setError(null);
+            }
+        } catch (NumberFormatException e) {
+            etWeight.setError("Niepoprawny format liczby");
+        }
+    }
+
+    private void calculateBmi() {
+        String weightStr = etWeight.getText().toString().trim();
+        String heightStr = etHeight.getText().toString().trim();
+        boolean isValid = true;
+        boolean metric = isMetric();
+
+        double minW = metric ? 20.0 : 44.0;
+        double maxW = metric ? 300.0 : 660.0;
+        String unitW = metric ? "kg" : "lb";
+
+        double minH = metric ? 100.0 : 39.0;
+        double maxH = metric ? 250.0 : 98.0;
+        String unitH = metric ? "cm" : "in";
+
+        double weight = 0;
+        if (weightStr.isEmpty()) {
+            etWeight.setError("Podaj wagę");
             isValid = false;
         } else {
             try {
-                participants = Integer.parseInt(participantsStr);
-                if (participants < 1 || participants > 50) {
-                    etParticipants.setError(getString(R.string.err_participants_range));
+                weight = Double.parseDouble(weightStr);
+                if (weight < minW || weight > maxW) {
+                    etWeight.setError(String.format(Locale.US, "Waga musi być z zakresu %.0f - %.0f %s", minW, maxW, unitW));
                     isValid = false;
-                } else {
-                    etParticipants.setError(null);
                 }
             } catch (NumberFormatException e) {
-                etParticipants.setError(getString(R.string.err_participants_format));
+                etWeight.setError("Niepoprawna liczba");
                 isValid = false;
             }
         }
 
-        if (spRoom.getSelectedItemPosition() == 0) {
-            showErrorTextView(tvRoomError, getString(R.string.err_room_required));
+        double height = 0;
+        if (heightStr.isEmpty()) {
+            etHeight.setError("Podaj wzrost");
             isValid = false;
         } else {
-            hideErrorTextView(tvRoomError);
+            try {
+                height = Double.parseDouble(heightStr);
+                if (height < minH || height > maxH) {
+                    etHeight.setError(String.format(Locale.US, "Wzrost musi być z zakresu %.0f - %.0f %s", minH, maxH, unitH));
+                    isValid = false;
+                }
+            } catch (NumberFormatException e) {
+                etHeight.setError("Niepoprawna liczba");
+                isValid = false;
+            }
         }
 
-        int selectedCateringId = rgCatering.getCheckedRadioButtonId();
-        if (selectedCateringId == -1) {
-            showErrorTextView(tvCateringError, getString(R.string.err_catering_required));
-            isValid = false;
+        if (!isValid) {
+            return;
+        }
+        double bmi;
+        if (metric) {
+            double heightM = height / 100.0;
+            bmi = weight / (heightM * heightM);
         } else {
-            hideErrorTextView(tvCateringError);
+            bmi = (weight / (height * height)) * 703.0;
         }
 
-        if (!cbTerms.isChecked()) {
-            showErrorTextView(tvTermsError, getString(R.string.err_terms_required));
-            isValid = false;
+        // 4. Kategoria BMI
+        String category;
+        if (bmi < 18.5) {
+            category = "Niedowaga";
+        } else if (bmi < 25.0) {
+            category = "Waga prawidłowa";
+        } else if (bmi < 30.0) {
+            category = "Nadwaga";
         } else {
-            hideErrorTextView(tvTermsError);
+            category = "Otyłość";
         }
 
-        if (isValid) {
-            String selectedRoom = spRoom.getSelectedItem().toString();
-            RadioButton selectedRadio = findViewById(selectedCateringId);
-            String selectedCatering = selectedRadio.getText().toString();
-
-            String summary = getString(
-                    R.string.toast_summary_format,
-                    eventName,
-                    participants,
-                    selectedRoom,
-                    selectedCatering
-            );
-
-            Toast.makeText(this, summary, Toast.LENGTH_LONG).show();
-        }
+        String systemLabel = metric ? "kg/cm" : "lb/in";
+        String resultText = String.format(Locale.US, "Twoje BMI (%s): %.2f\nKategoria: %s", systemLabel, bmi, category);
+        tvResult.setText(resultText);
     }
 
-    private void clearForm() {
-        etEventName.setText("");
-        etParticipants.setText("");
-        spRoom.setSelection(0);
-        rgCatering.clearCheck();
-        cbTerms.setChecked(false);
-
-        etEventName.setError(null);
-        etParticipants.setError(null);
-        hideErrorTextView(tvRoomError);
-        hideErrorTextView(tvCateringError);
-        hideErrorTextView(tvTermsError);
-
-        etEventName.requestFocus();
-    }
-
-    private void showErrorTextView(TextView tv, String message) {
-        tv.setText(message);
-        tv.setVisibility(View.VISIBLE);
-    }
-
-    private void hideErrorTextView(TextView tv) {
-        tv.setText("");
-        tv.setVisibility(View.GONE);
-    }
-
-    private void restoreErrorTextView(TextView tv, String savedMessage) {
-        if (savedMessage != null && !savedMessage.isEmpty()) {
-            showErrorTextView(tv, savedMessage);
-        }
+    private void clearAll() {
+        etWeight.setText("");
+        etHeight.setText("");
+        etWeight.setError(null);
+        etHeight.setError(null);
+        tvResult.setText("Wpisz dane i kliknij Oblicz BMI");
+        etWeight.requestFocus();
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (tvRoomError.getVisibility() == View.VISIBLE) {
-            outState.putString(KEY_ROOM_ERR, tvRoomError.getText().toString());
-        }
-        if (tvCateringError.getVisibility() == View.VISIBLE) {
-            outState.putString(KEY_CATERING_ERR, tvCateringError.getText().toString());
-        }
-        if (tvTermsError.getVisibility() == View.VISIBLE) {
-            outState.putString(KEY_TERMS_ERR, tvTermsError.getText().toString());
-        }
+        outState.putString(KEY_RESULT_TEXT, tvResult.getText().toString());
     }
 }
