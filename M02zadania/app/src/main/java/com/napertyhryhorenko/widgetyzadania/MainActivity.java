@@ -1,6 +1,7 @@
 package com.napertyhryhorenko.widgetyzadania;
-
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +35,37 @@ public class MainActivity extends AppCompatActivity {
                 tvResult.setText(savedResult);
             }
         }
+
+        etWeight.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString().trim();
+
+                if (text.isEmpty()) {
+                    etWeight.setError(null);
+                    return;
+                }
+
+                try {
+                    double weight = Double.parseDouble(text);
+                    if (weight < 20 || weight > 300) {
+                        etWeight.setError("Waga musi być z zakresu 20 - 300 kg");
+                    } else {
+                        etWeight.setError(null);
+                    }
+                } catch (NumberFormatException e) {
+                    etWeight.setError("Niepoprawny format liczby");
+                }
+            }
+        });
 
         btnCalculate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,10 +146,8 @@ public class MainActivity extends AppCompatActivity {
     private void clearAll() {
         etWeight.setText("");
         etHeight.setText("");
-
         etWeight.setError(null);
         etHeight.setError(null);
-
         tvResult.setText("Wpisz dane i kliknij Oblicz BMI");
         etWeight.requestFocus();
     }
