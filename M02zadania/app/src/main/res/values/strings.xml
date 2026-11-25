@@ -1,7 +1,34 @@
 <resources>
-    <string name="app_name">TechSklep</string>
-    <string name="header_title">TechSklep</string>
-    <string name="header_description">Najlepsza elektronika i akcesoria w jednym miejscu.</string>
-    <string name="button_start">Start</string>
-    <string name="toast_soon">Wkrótce</string>
+    <string name="app_name">Rezerwacja Sali</string>
+    <string name="header_title">Formularz rezerwacji sali</string>
+
+    <string name="hint_event_name">Nazwa wydarzenia (min. 3 znaki)</string>
+    <string name="hint_participants">Liczba uczestników (1 - 50)</string>
+    <string name="label_room">Wybierz salę:</string>
+    <string name="label_catering">Pakiet cateringowy:</string>
+    <string name="catering_none">Brak</string>
+    <string name="catering_coffee">Przerwa kawowa</string>
+    <string name="catering_lunch">Pełny lunch</string>
+    <string name="cb_terms">Akceptuję regulamin obiektu</string>
+
+    <string-array name="rooms_array">
+        <item>-- Wybierz salę --</item>
+        <item>Sala A (Alfa - parter)</item>
+        <item>Sala B (Beta - I piętro)</item>
+        <item>Sala C (Gamma - VIP)</item>
+    </string-array>
+
+    <string name="btn_save">Zapisz</string>
+    <string name="btn_clear">Wyczyść</string>
+
+    <string name="err_event_empty">Podaj nazwę wydarzenia</string>
+    <string name="err_event_short">Nazwa musi mieć min. 3 znaki</string>
+    <string name="err_participants_empty">Podaj liczbę uczestników</string>
+    <string name="err_participants_range">Liczba musi być z zakresu 1–50</string>
+    <string name="err_participants_format">Niepoprawna liczba</string>
+    <string name="err_room_required">Musisz wybrać salę z listy</string>
+    <string name="err_catering_required">Wybierz jedną z opcji cateringu</string>
+    <string name="err_terms_required">Wymagana akceptacja regulaminu</string>
+
+    <string name="toast_summary_format">Zapisano: %1$s | Osób: %2$d | %3$s | Catering: %4$s</string>
 </resources>
