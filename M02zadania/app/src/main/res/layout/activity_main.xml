@@ -1,110 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvInfo"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:text="Test cyklu życia Activity\n\nOtwórz Logcat (tag: CYKL_ZYCIA) i przetestuj:\n• Przycisk Home i powrót\n• Obrót ekranu\n• Przełączenie aplikacji\n• Zablokowanie ekranu"
+        android:textSize="16sp" />
 
-        <ImageView
-            android:id="@+id/ivProduct"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:contentDescription="Obrazek produktu"
-            android:src="@drawable/blackman" />
+    <Button
+        android:id="@+id/btnFinish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Zamknij Activity (finish)" />
 
-        <EditText
-            android:id="@+id/etName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Wpisz swoje imię"
-            android:inputType="textPersonName" />
-
-        <CheckBox
-            android:id="@+id/cbConsent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Akceptuję regulamin (zgoda)" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/swNewsletter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Powiadomienia push" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Wybierz rozmiar:"
-            android:textStyle="bold" />
-
-        <RadioGroup
-            android:id="@+id/rgSize"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rbS"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="S" />
-
-            <RadioButton
-                android:id="@+id/rbM"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:checked="true"
-                android:text="M" />
-
-            <RadioButton
-                android:id="@+id/rbL"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="L" />
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Głośność (0 - 100):"
-            android:textStyle="bold" />
-
-        <SeekBar
-            android:id="@+id/sbVolume"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:max="100"
-            android:progress="50" />
-
-        <Button
-            android:id="@+id/btnSubmit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Pokaż podsumowanie" />
-
-        <TextView
-            android:id="@+id/tvSummary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="#EFEFEF"
-            android:padding="12dp"
-            android:text="Tutaj pojawi się podsumowanie..."
-            android:textSize="16sp" />
-
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

@@ -1,69 +1,58 @@
 package com.napertyhryhorenko.widgetyzadania;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "CYKL_ZYCIA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "onCreate() - tworzenie aktywności");
 
-        // Powiązanie widoków z kodem
-        EditText etName = findViewById(R.id.etName);
-        CheckBox cbConsent = findViewById(R.id.cbConsent);
-        SwitchCompat swNewsletter = findViewById(R.id.swNewsletter);
-        RadioGroup rgSize = findViewById(R.id.rgSize);
-        SeekBar sbVolume = findViewById(R.id.sbVolume);
-        Button btnSubmit = findViewById(R.id.btnSubmit);
-        TextView tvSummary = findViewById(R.id.tvSummary);
-
-        // Obsługa kliknięcia przycisku
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        Button btnFinish = findViewById(R.id.btnFinish);
+        btnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 1. Odczyt z EditText (jeśli puste, wpisujemy "Brak")
-                String name = etName.getText().toString().trim();
-                if (name.isEmpty()) {
-                    name = "Brak";
-                }
-
-                // 2. Odczyt z CheckBox
-                String consent = cbConsent.isChecked() ? "tak" : "nie";
-
-                // 3. Odczyt ze Switch
-                String pushStatus = swNewsletter.isChecked() ? "włączone" : "wyłączone";
-
-                // 4. Odczyt z RadioGroup (sprawdzamy, który RadioButton jest zaznaczony)
-                int selectedRadioId = rgSize.getCheckedRadioButtonId();
-                String size = "nie wybrano";
-                if (selectedRadioId != -1) {
-                    RadioButton selectedRadioButton = findViewById(selectedRadioId);
-                    size = selectedRadioButton.getText().toString();
-                }
-
-                // 5. Odczyt z SeekBar
-                int volume = sbVolume.getProgress();
-
-                // Złożenie tekstu i wyświetlenie w TextView
-                String resultText = "Imię: " + name +
-                        ", zgoda: " + consent +
-                        ", powiadomienia: " + pushStatus +
-                        ", rozmiar: " + size +
-                        ", głośność: " + volume;
-
-                tvSummary.setText(resultText);
+                Log.d(TAG, "Kliknięto przycisk Zamknij -> wywołuję finish()");
+                finish();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart() - aktywność staje się widoczna");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() - aktywność na pierwszym planie (interakcja z użytkownikiem)");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() - aktywność traci fokus (częściowo zasłonięta lub pauzowana)");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() - aktywność całkowicie niewidoczna (w tle)");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy() - niszczenie aktywności i zwalnianie zasobów");
     }
 }
